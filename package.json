@@ -9,6 +9,7 @@
   "scripts": {
     "publishFeed": "tsx scripts/publishFeedGen.ts",
     "unpublishFeed": "tsx scripts/unpublishFeedGen.ts",
+    "add": "tsx scripts/addPost.ts",
     "start": "tsx src/index.ts",
     "build": "tsc"
   },
