@@ -13,23 +13,32 @@ const run = async () => {
   })
   const db = createDb(process.env.FEEDGEN_SQLITE_LOCATION || 'db/db.sqlite')
 
-  const post = await askPost(agent)
-  console.log(post)
-  await insertPost(db, post)
+  while (true) {
+    const answers = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'link',
+        message: 'Enter post link:',
+        required: false,
+      },
+    ])
+
+    if (answers.link) {
+      const post = await processPost(answers.link, agent)
+      console.log(post)
+      await insertPost(db, post)
+    } else {
+      console.log('No link provided, exiting...')
+      break
+    }
+  }
 }
 
-const askPost = async (agent: AtpAgent) => {
-  const answers = await inquirer.prompt([
-    {
-      type: 'input',
-      name: 'link',
-      message: 'Enter post link:',
-      required: true,
-    },
-  ])
-  const [handle, rkey] = answers.link
+const processPost = async (link: string, agent: AtpAgent) => {
+  const [handle, rkey] = link
     .replace('https://bsky.app/profile/', '')
     .split('/post/')
+
   const record = await agent.com.atproto.repo.getRecord({
     repo: handle,
     collection: 'app.bsky.feed.post',
