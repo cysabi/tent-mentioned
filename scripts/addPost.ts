@@ -37,8 +37,8 @@ const askPost = async (agent: AtpAgent) => {
   })
 
   return {
-    uri: record.data.cid as string,
-    cid: record.data.uri as string,
+    uri: record.data.uri as string,
+    cid: record.data.cid as string,
     indexedAt: (record.data.value as any).createdAt as string,
   }
 }
